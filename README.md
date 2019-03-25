@@ -27,7 +27,7 @@ The webpage [https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-me
 
 ### BEAST2 - Bayesian Evolutionary Analysis Sampling Trees 2
 
-BEAST2 ([http://www.beast2.org](http://www.beast2.org)) is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees. This tutorial is written for BEAST v{{ page.beastversion }} {% cite BEAST2book2014 --file CoupledMCMC/master-refs %}.
+BEAST2 ([http://www.beast2.org](http://www.beast2.org)) is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees. This tutorial is written for BEAST v{{ page.beastversion }} {% cite BEAST2book2014 --file CoupledMCMC-Tutorial/master-refs %}.
 
 
 ### BEAUti2 - Bayesian Evolutionary Analysis Utility
@@ -47,7 +47,7 @@ TreeAnnotator is provided as a part of the BEAST2 package so you do not need to 
 
 # Practical: Setting up an analysis with coupled MCMC
 
-{% cite Mueller348391 --file CoupledMCMC/master-refs.bib %}
+{% cite Mueller348391 --file CoupledMCMC-Tutorial/master-refs.bib %}
 
 
 
@@ -266,7 +266,7 @@ Next, open the log files of all chains which had a higher iteration and remove t
 
 - Blog post explaining coupled MCMC [https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-metropolis-coupled-mcmc/](https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-metropolis-coupled-mcmc/)
 - Coupled MCMC source code: [https://github.com/nicfel/CoupledMCMC](https://github.com/nicfel/CoupledMCMC)
-- [Bayesian Evolutionary Analysis with BEAST 2](http://www.beast2.org/book.html) {% cite BEAST2book2014 --file CoupledMCMC/master-refs.bib %}
+- [Bayesian Evolutionary Analysis with BEAST 2](http://www.beast2.org/book.html) {% cite BEAST2book2014 --file CoupledMCMC-Tutorial/master-refs.bib %}
 - BEAST 2 website and documentation: [http://www.beast2.org/](http://www.beast2.org/)
 - Join the BEAST user discussion: [http://groups.google.com/group/beast-users](http://groups.google.com/group/beast-users)
 
