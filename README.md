@@ -1,7 +1,7 @@
 ---
 author: Nicola F. Müller
 level: Intermediate
-title: AIM in StarBeast2 v0.15.2 Tutorial
+title: Bayesian Skyline with coupled MCMC Tutorial
 subtitle: Setting up an Bayesian Skyline with coupled MCMC
 beastversion: 2.5.2
 ---
@@ -240,12 +240,12 @@ Next, go to the line that contains the code `id="mcmc"`. In `hcv_mcmc.xml`, this
 
 Next, replace that line with
 ```
-<run id="mcmc" spec="beast.coupledMCMC.CoupledMCMC" chainLength="10000000" deltaTemperature="0.1" chains="2" resampleEvery="10000">
+<run id="mcmc" spec="beast.coupledMCMC.CoupledMCMC" chainLength="10000000" deltaTemperature="0.05" chains="2" resampleEvery="10000">
 ```
 
 *  `chainLength="100000000"` defines for how many iterations the chains is run
 
-*  `deltaTemperature="0.1"` defines the temperature difference between the chain *n* and chain *n-1*.
+*  `deltaTemperature="0.05"` defines the temperature difference between the chain *n* and chain *n-1*.
 
 *  `chains="2"` defines the number of parallel chains that are run. The first chain is the one that explores the posterior just like a normal MCMC chain. All other chains are what's called *heated*. This means that MCMC moves of those chains have a higher probability of being accepted. While these heated chains don't explore the posterior properly, they can be used to propose new states to the one cold chain.   
 
