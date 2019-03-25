@@ -47,10 +47,6 @@ TreeAnnotator is provided as a part of the BEAST2 package so you do not need to 
 
 # Practical: Setting up an analysis with coupled MCMC
 
-{% cite Mueller348391 --file CoupledMCMC-Tutorial/master-refs.bib %}
-
-
-
 In this tutorial, we will describe the two different ways to setup a BEAST2 analysis to run with coupled MCMC.
 To do so, we will setup a Bayesian Skyline plot analysis by following analogue to the tutorial on [skyline plots](https://taming-the-beast.org/tutorials/Skyline-plots/).
 
@@ -59,14 +55,14 @@ All other analyses have to be setup by editing one line in the `*xml` file.
 
 
 ## The Data
-The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file Skyline-plots/master-refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Pybus2003, Drummond2005, Stadler2013 --file Skyline-plots/master-refs %}.
+The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file CoupledMCMC-Tutorial/master-refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Pybus2003, Drummond2005, Stadler2013 --file CoupledMCMC-Tutorial/master-refs %}.
 
 With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see [Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data.
 
 <figure>
 	<a id="fig:prevalence"></a>
 	<img style="width:50%;" src="figures/Estimated_number_hcv.png" alt="">
-	<figcaption>Figure 1: The estimated number of Hepatitis C cases in Egypt {% cite Pybus2003 --file Skyline-plots/master-refs.bib %}.</figcaption>
+	<figcaption>Figure 1: The estimated number of Hepatitis C cases in Egypt {% cite Pybus2003 --file CoupledMCMC-Tutorial/master-refs.bib %}.</figcaption>
 </figure>
 <br>
 
@@ -112,7 +108,7 @@ After we have loaded the sequences into BEAUti, we have to specify the evolution
 </figure>
 <br>
 
-As we use sequences that were sampled at the same point in time, we need to fix the clock rate (for more information on this please refer to the tutorial on molecular clocks). We will use an estimate inferred in {% cite Pybus2001 --file Skyline-plots/master-refs %} to fix the clock rate. In this case all the samples were contemporaneous (at the same time) and the clock rate works as a mapping of the estimated tree branch lengths into calendar time.
+As we use sequences that were sampled at the same point in time, we need to fix the clock rate (for more information on this please refer to the tutorial on molecular clocks). We will use an estimate inferred in {% cite Pybus2001 --file CoupledMCMC-Tutorial/master-refs %} to fix the clock rate. In this case all the samples were contemporaneous (at the same time) and the clock rate works as a mapping of the estimated tree branch lengths into calendar time.
 
 We will keep the strict clock model and will set `Clock.rate` to 0.00079.
 
@@ -137,7 +133,7 @@ For this analysis we will set the number of dimensions to 4 (the default value i
 </figure>
 <br>
 
-Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master-refs %}) or do not require dimensions to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master-refs %}).
+Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline {% cite Heled2008 --file CoupledMCMC-Tutorial/master-refs %}) or do not require dimensions to be specified (Skyride {% cite Minin2008 --file CoupledMCMC-Tutorial/master-refs %}).
 
 We can leave the rest of the priors as they are and go to the `Coupled MCMC panel`.
 In contrast to regular MCMC, we have to define a few more things.
@@ -152,7 +148,7 @@ The next parameter we have to set is the `deltaTemperature`, the higher this val
 Hotter chains on the other hand are more easily able to cross unlikely intermediate states and can therefore help chains to move out of local optimas.
 Here, we use a value of 0.05.
 This value should be different depending on the dataset, the analysis and the number of chains.
-Overall, it should be chosen such that the acceptance probability of an exchange of states between chains is between 0.25 and 0.6 {% cite altekar2004parallel --file Skyline-plots/master-refs %}.
+Overall, it should be chosen such that the acceptance probability of an exchange of states between chains is between 0.25 and 0.6 {% cite altekar2004parallel --file CoupledMCMC-Tutorial/master-refs %}.
 
 <figure>
 	<a id="fig:dimensions"></a>
