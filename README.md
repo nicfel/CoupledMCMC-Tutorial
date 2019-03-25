@@ -2,7 +2,7 @@
 author: Nicola F. Müller
 level: Intermediate
 title: Bayesian Skyline with coupled MCMC Tutorial
-subtitle: Setting up an Bayesian Skyline with coupled MCMC
+subtitle: Setting up Bayesian Skyline with coupled MCMC
 beastversion: 2.5.2
 ---
 
