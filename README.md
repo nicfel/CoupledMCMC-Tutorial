@@ -265,7 +265,7 @@ Next, open the log files of all chains which had a higher iteration and remove t
 # Useful Links
 
 - Blog post explaining coupled MCMC [https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-metropolis-coupled-mcmc/](https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-metropolis-coupled-mcmc/)
-- Coupled MCMC source code: [https://github.com/genomescale/starbeast2](https://github.com/genomescale/starbeast2)
+- Coupled MCMC source code: [https://github.com/nicfel/CoupledMCMC](https://github.com/nicfel/CoupledMCMC)
 - [Bayesian Evolutionary Analysis with BEAST 2](http://www.beast2.org/book.html) {% cite BEAST2book2014 --file AIM-Tutorial/master-refs.bib %}
 - BEAST 2 website and documentation: [http://www.beast2.org/](http://www.beast2.org/)
 - Join the BEAST user discussion: [http://groups.google.com/group/beast-users](http://groups.google.com/group/beast-users)
