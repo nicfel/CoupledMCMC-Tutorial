@@ -7,6 +7,7 @@ beastversion: 2.5.2
 ---
 
 
+
 # Background
 
 Coupled MCMC (also called parallel tempering or MC^3) is a Bayesian approach that uses heated chains in order to traverse unfavourable intermediate states more easily and in order to parallelise analyses.
