@@ -171,39 +171,46 @@ Overall, it should be chosen such that the acceptance probability of an exchange
 
 Next, we can run the xml.
 The output to the screen of a Coupled MCMC run looks slightly different then the one of a standard MCMC run.
-The column called *sample* describes at which iteration of the coupled MCMC we are. The column *swapsColdChain* denotes how many times the one cold chain (the chain that runs just like a regular MCMC chain) has been swapped with another chain. The *swapProbability* denotes how likely it is that a swapping between two chains is accepted. This vaue should be somewhere between *0.2* and *0.6*. A low values indicates that the heated chains are running too hot and are not efficiently exploring the posterior. A too high values indicates that the heated chains are not running hot enough and are thus exploring parameter space that are too similar to the one of the cold chain.
+The column called *sample* describes at which iteration of the coupled MCMC we are.
+The column *swapsColdChain* denotes how many times the one cold chain (the chain that runs just like a regular MCMC chain) has been swapped with another chain.
+The *swapProbability* denotes how likely it is that a swapping between two chains is accepted.
+By default, a value of 0.234 is targeted.
+The column *deltaTemperature* denotes the current temperature difference between chains.
 
 ```
-sample    swapsColdCain    swapProbability
-10000    0    0.0 --
-20000    1    0.5 3m15s/Msamples
-30000    1    0.3333333333333333 2m56s/Msamples
-40000    1    0.25 2m34s/Msamples
-50000    1    0.2 2m29s/Msamples
-60000    1    0.16666666666666666 2m24s/Msamples
-70000    1    0.14285714285714285 2m22s/Msamples
-80000    1    0.125 2m20s/Msamples
-90000    1    0.1111111111111111 2m15s/Msamples
-100000    1    0.1 2m12s/Msamples
-110000    1    0.09090909090909091 2m9s/Msamples
-120000    1    0.08333333333333333 2m8s/Msamples
+sample	swapsColdCain	swapProbability	deltaTemperature
+	0	0	0.0	0.1
+	1000	0	0.0	0.1 --
+	2000	0	0.0	0.1 --
+	3000	0	0.0	0.1 --
+	4000	0	0.0	0.1 --
+	5000	1	0.2	0.1 --
+	6000	1	0.16666666666666666	0.1 --
+	7000	1	0.2857142857142857	0.1 --
+	8000	1	0.25	0.1 --
+	9000	1	0.2222222222222222	0.1 --
+	10000	1	0.2	0.1 --
+	11000	1	0.18181818181818182	0.1 2m29s/Msamples
+	12000	1	0.16666666666666666	0.1 2m35s/Msamples
+	13000	1	0.15384615384615385	0.1 2m39s/Msamples
+	14000	1	0.14285714285714285	0.1 2m37s/Msamples
+	15000	1	0.13333333333333333	0.1 2m41s/Msamples
+	16000	1	0.125	0.1 2m42s/Msamples
+	17000	1	0.11764705882352941	0.1 2m46s/Msamples
 ```
 
 
 ### Exploring the results of Bayesian Coalescent Skyline analysis
 
 For the reconstruction of the population dynamics, we need two files: the `hcv.log` file and the `hcv.trees` file.
+These outputs can be handled exactly the same as the ones of a regular MCMC analysis.
 The log files contain the information about the group size and the population size.
 The group size specifies how many intervals are combined to have the same effective population size.
-The two files are logging the states of the one cold chain.
-There are however two more files `chain1hcv.log` and `chain1hcv.trees`.
-These two files, log the states of the 1st heated chain and are not needed for the post-processing.
-If we look at the inferred distributions between the two files `hcv.log` and `chain1hcv.log`, we see that these don't match up and that `chain1hcv.log` explores less optimal states with higher frequency.
 
 <figure>
 	<a id="fig:dimensions"></a>
-	<img src="figures/HeatedChains.png" alt="">
-	<figcaption>Figure 7: The heated chain does no correctly explore the posterior probability space.</figcaption>
+	<img src="figures/Tracer.png" alt="">
+	<figcaption>Figure 7: opening the log file in tracer.</figcaption>
 </figure>
 <br>
 
@@ -229,41 +236,35 @@ The output will have the years on the x-axis and the effective population size o
 
 There are two ways to save the analysis, it can either be saved as a `*.pdf` or as a tab delimited file. To save it as a tab delimited file, you can go to `File > Export Data`. The exported file will have five rows, the time, the mean, median lower 95% interval and the upper 95% interval of the estimates, which you can use to plot the data with other software (R, Matlab, etc).
 
+### Assessing convergence
+
+Since parallel tempering runs multiple chains, it is possible for all these chains to be stuck in local optima.
+Parallel tempering will then cycle through these chains that are all stuck in local optima.
+This can create vert high ESS values of analyses that did not converge.
+It is therefore highly advisable to run several replicates (e.g. 3) of the same analysis to see if they all give the same result.
+Additionally, ESS might not be the best measure of converge of a parallel tempering analysis and something like the potential scale reduction factor might be more suited to assess convergence.
+
+(Running replicates is not only advisable for parallel tempering analysis, but for MCMC as well).
 
 
 
-## Setting up the same analysis without using BEAUTi
+## Setting up the same analysis for packages that require loading their own template
 
-In order to setup the analysis to run with coupled MCMC without using BEAUTi, we can create and xml that is supposed to run with regular MCMC.
-After this is done and the `*.xml` file (here `hcv_mcmc.xml`), has been saved, open the `*.xml` file in a Text Editor (e.g. TextEdit in MAC or notepad, but not word! in Windows).
+In order to setup a parallel tempering analysis for packages that require loading their own packages, we can use a BEAUti app.
+To do so, open BEAUti and go to `File`, select `Launch Apps`.
+There, click on MCMC to Coupled MCMC converter and click `Launch`.
 
-Next, go to the line that contains the code `id="mcmc"`. In `hcv_mcmc.xml`, this is going to be the following line
+First, load the MCMC xml and define an output file for the parallel tempering xml.
+Then, the analysis can be setup, such as for example the number of chains can be defined.
+When everything is setup, just press launch and the parallel tempering xml will be created.
+This xml can then be run using parallel tempering.
 
-```
-<run id="mcmc" spec="MCMC" chainLength="10000000">
-```
-
-Next, replace that line with
-```
-<run id="mcmc" spec="beast.coupledMCMC.CoupledMCMC" chainLength="10000000" deltaTemperature="0.05" chains="2" resampleEvery="10000">
-```
-
-*  `chainLength="100000000"` defines for how many iterations the chains is run
-
-*  `deltaTemperature="0.05"` defines the temperature difference between the chain *n* and chain *n-1*.
-
-*  `chains="2"` defines the number of parallel chains that are run. The first chain is the one that explores the posterior just like a normal MCMC chain. All other chains are what's called *heated*. This means that MCMC moves of those chains have a higher probability of being accepted. While these heated chains don't explore the posterior properly, they can be used to propose new states to the one cold chain.   
-
-
-Next, save the xml file again and run it with BEAST. In order to post-process the output, just use the log files that do *not* start with `chain...` since these are the log files for the heated chains.
-
-
-### A note on resuming coupled MCMC runs
-
-Coupled MCMC runs can be resumed just like any other BEAST.
-It is however possible that the different log files of the different chains are at different iterations, which will return an error if you try to resume this run.
-If this error happens, load the log files of the cold chain and all hot chains (the chains that start with `chain...`) and look at the lowest value of the iteration.
-Next, open the log files of all chains which had a higher iteration and remove the last lines until the last line has the same sample number as the lowest iteration of any chain.
+<figure>
+	<a id="fig:skyline"></a>
+	<img style="width:50%;" src="figures/App.png" alt="">
+	<figcaption>Figure 10: Launching the MCMC to Coupled MCMC app.</figcaption>
+</figure>
+<br>
 
 ----
 
