@@ -1,25 +1,29 @@
 ---
 author: Nicola F. Müller
-level: Intermediate
-title: Bayesian Skyline with coupled MCMC Tutorial
-subtitle: Setting up Bayesian Skyline with coupled MCMC
-beastversion: 2.5.2
+level: Easy
+title: Bayesian Skyline with adaptive parallel Tempering with CoupledMCMC Tutorial
+subtitle: Adaptive parallel Tempering
+beastversion: 2.6.0
 ---
 
 
 
 # Background
 
-Coupled MCMC (also called parallel tempering or MC^3) is a Bayesian approach that uses heated chains in order to traverse unfavourable intermediate states more easily and in order to parallelise analyses.
-Coupled MCMC works by having 1 cold chain which works exactly the same as a standard MCMC chain and one or more heated chains.
+Parallel tempering is a Bayesian approach that uses heated chains in order to traverse unfavourable intermediate states more easily and in order to parallelise analyses.
+Parallel tempering works by having one cold chain which works exactly the same as a standard MCMC chain and one or more heated chains.
 The chains are heated in temperature increments defined in this implementations as *deltaTemperature*.
 These heated chains have increase acceptance probabilities, making it more easily for them to explore parts of the state space that are less likely.
 In turn however, these heated chains to not explore the posterior probability space such that the frequency at which they visit a state is proportional to their probability.
 The can however be used to propose new states.
-In order to do so, coupled MCMC proposes to exchange the states of two random chains after each chain is run for some amount of iterations in what amounts to a MCMC move.
+In order to do so, parallel tempering proposes to exchange the states of two random chains after each chain is run for some amount of iterations in what amounts to a MCMC move.
 After how many iterations the states of two random chains are proposed to be swapped is in this implementation called *resampleEvery*.
+The webpage [https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-metropolis-coupled-mcmc/](https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-metropolis-coupled-mcmc/), gives a good introduction into how parallel tempering.
 
-The webpage [https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-metropolis-coupled-mcmc/](https://darrenjw.wordpress.com/2013/09/29/parallel-tempering-and-metropolis-coupled-mcmc/), gives a good introduction into how coupled MCMC works.
+Typically, using such an approach requires to find optimal temperatures for heated chains that allow using the additional computational resources efficiently.
+The parallel tempering approach implemented in CoupledMCMC circumvents this by automatically tuning this temperature difference during a run to achieve an acceptance probability of swaps of 0.234.
+This means that the only additional parameter that has to be specified by the user is the number of chains used, which is typically determined by the number of CPU's available.
+
 
 
 ----
@@ -46,16 +50,18 @@ TreeAnnotator is provided as a part of the BEAST2 package so you do not need to 
 
 ----
 
-# Practical: Setting up an analysis with coupled MCMC
+# Practical: Setting up an analysis with CoupledMCMC
 
-In this tutorial, we will describe the two different ways to setup a BEAST2 analysis to run with coupled MCMC.
+In this tutorial, we will describe the two different ways to setup a BEAST2 analysis to run with CoupledMCMC
 To do so, we will setup a Bayesian Skyline plot analysis by following analogue to the tutorial on [skyline plots](https://taming-the-beast.org/tutorials/Skyline-plots/).
 
 Setting up an analysis in BEAUTi is currently only possible for analyses that only use the standard template, i.e. such for which setting up an analysis does not require to load a template.
-All other analyses have to be setup by editing one line in the `*xml` file.
+
+All other analyses can use a conversion tool to convert an MCMC xml into a parallel tempering xml.
 
 
 ## The Data
+
 The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file CoupledMCMC-Tutorial/master-refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Pybus2003, Drummond2005, Stadler2013 --file CoupledMCMC-Tutorial/master-refs %}.
 
 With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see [Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data.
@@ -88,10 +94,10 @@ Next, we have to load the BEAUTi template from `File`, select `Template >> Coupl
 <figure>
 	<a id="fig:example1"></a>
 	<img style="width:70%;" src="figures/Template.png" alt="">
-	<figcaption>Figure 2: Load the Coupled MCMC template to setup an analysis.</figcaption>
+	<figcaption>Figure 2: Load the CoupledMCMC template to setup an analysis.</figcaption>
 </figure>
 
-This template is exactly the same as the standard BEAUTi template, but uses coupled MCMC instead of regular MCMC.
+This template is exactly the same as the standard BEAUTi template, but uses parallel tempering instead of regular MCMC.
 
 
 ### Setting up the analysis with Bayesian Coalescent Skyline (similar to [skyline plots](https://taming-the-beast.org/tutorials/Skyline-plots/))
@@ -136,19 +142,21 @@ For this analysis we will set the number of dimensions to 4 (the default value i
 
 Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline {% cite Heled2008 --file CoupledMCMC-Tutorial/master-refs %}) or do not require dimensions to be specified (Skyride {% cite Minin2008 --file CoupledMCMC-Tutorial/master-refs %}).
 
-We can leave the rest of the priors as they are and go to the `Coupled MCMC panel`.
+We can leave the rest of the priors as they are and go to the `Parallel tempering` panel.
 In contrast to regular MCMC, we have to define a few more things.
 First, we have to define the number of chains.
 This number should be equal to the number of threads you can run, resp. the number of CPU cores.
-The `resampleEvery`, defines after how many iterations, two chains should be proposed to exchange states.
+The `Resample Every`, defines after how many iterations, two chains should be proposed to exchange states.
 If this is too low, the chains will communicate a lot and the exchanging of states itself can consume more time then the actual MCMC.
 If it's too high, the states of chains are exchanged and the ESS per time isn't as high as it could be.
-We here propose to exchange states between the 2 chains every 1000 iterations, which will allow for at most 10 000 swaps of states.
+We here exchange states between the 2 chains every 1000 iterations, which will allow for at most 10 000 swaps of states during the whole analysis.
 
-The next parameter we have to set is the `deltaTemperature`, the higher this value, the hotter chains become and the more time they spend in unlikely parts of the posterior probability space.
-Hotter chains on the other hand are more easily able to cross unlikely intermediate states and can therefore help chains to move out of local optimas.
-Here, we use a value of 0.05.
-This value should be different depending on the dataset, the analysis and the number of chains.
+The next parameter we have to set is the `Delta Temperature`.
+Hotter chains are more easily able to cross unlikely intermediate states and can therefore help chains to move out of local optimas.
+`Delta Temperature` here is only the initial value of the temperature difference between the two chains and will be tuned lated on automatically.
+`Target` defines the target acceptance probability.
+The temperature difference will be adapted during the analysis to match this acceptance probability over the course of the analysis.
+
 Overall, it should be chosen such that the acceptance probability of an exchange of states between chains is between 0.25 and 0.6 {% cite altekar2004parallel --file CoupledMCMC-Tutorial/master-refs %}.
 
 <figure>
